@@ -83,7 +83,7 @@
                 if (type == "dotnetjs")
                     return defaultUri;
 
-                if (location.hostname !== 'localhost' && defaultUri.endsWith(".dll"))
+                if (location.hostname !== 'localhost')
                     defaultUri = defaultUri + '.br';
 
                 const fetchResources = fetch(defaultUri, {});
@@ -98,7 +98,7 @@
                     progressbar.innerText = pct;
                     console.info(i + '/' + total + ' (' + pct + ') ' + name);
 
-                    if (location.hostname !== 'localhost' && defaultUri.endsWith(".dll")) {
+                    if (location.hostname !== 'localhost') {
                         const originalResponseBuffer = await r.arrayBuffer();
                         const originalResponseArray = new Int8Array(originalResponseBuffer);
                         const decompressedResponseArray = BrotliDecode(originalResponseArray);
