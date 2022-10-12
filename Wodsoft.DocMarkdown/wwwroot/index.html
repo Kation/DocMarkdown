@@ -47,7 +47,9 @@
     <script src="js/material.min.js"></script>
     <script src="_content/Blazorise.Material/blazorise.material.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
-    <script type="text/javascript">
+    <script type="module">
+        import { BrotliDecode } from './js/decode.min.js';
+
         window.highlightCode = (id) => {
             try {
                 hljs.highlightElement(document.getElementById(id));
@@ -70,7 +72,7 @@
                     q[a[0]] = decodeURIComponent(a[1]);
                 });
                 if (q.redirect !== undefined) {
-                    window.history.replaceState(null, null, redirect);
+                    window.history.replaceState(null, null, q.redirect);
                 }
             }
         }(window.location))
@@ -81,15 +83,12 @@
                 if (type == "dotnetjs")
                     return defaultUri;
 
-                var fetchResources = fetch(defaultUri, {
-                    cache: 'no-cache',
-                    integrity: integrity,
-                    headers: { 'MyCustomHeader': 'My custom value' }
-                });
+                if (location.hostname !== 'localhost' && defaultUri.endsWith(".dll"))
+                    defaultUri = defaultUri + '.br';
 
-
+                const fetchResources = fetch(defaultUri, {});
                 allResourcesBeingLoaded.push(fetchResources);
-                fetchResources.then((r) => {
+                return fetchResources.then(async (r) => {
                     i++;
                     var total = allResourcesBeingLoaded.length;
                     var progressbar = document.getElementById('progressBar');
@@ -98,6 +97,18 @@
                     progressbar.style.width = pct;
                     progressbar.innerText = pct;
                     console.info(i + '/' + total + ' (' + pct + ') ' + name);
+
+                    if (location.hostname !== 'localhost' && defaultUri.endsWith(".dll")) {
+                        const originalResponseBuffer = await r.arrayBuffer();
+                        const originalResponseArray = new Int8Array(originalResponseBuffer);
+                        const decompressedResponseArray = BrotliDecode(originalResponseArray);
+                        const contentType = type ===
+                            'dotnetwasm' ? 'application/wasm' : 'application/octet-stream';
+                        return new Response(decompressedResponseArray,
+                            { headers: { 'content-type': contentType } });
+                    }
+                    else
+                        return r;
                 });
                 return fetchResources;
             }
