@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Document Markdown</title>
+    <base href="/" />
+    <!-- Material CSS -->
+    <link href="css/material.min.css" rel="stylesheet">
+
+    <!-- Add Material font (Roboto) and Material icon as needed -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i|Roboto+Mono:300,400,700|Roboto+Slab:300,400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link href="_content/Blazorise/blazorise.css" rel="stylesheet" />
+    <link href="_content/Blazorise.Material/blazorise.material.css" rel="stylesheet" />
+    <link href="_content/Blazorise.Icons.Material/blazorise.icons.material.css" rel="stylesheet" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+    <link href="css/markdown.css" rel="stylesheet" />
+</head>
+
+<body>
+    <div id="app">
+        <div class="position-fixed" style="bottom: 0; top: 0; left: 0; right: 0;">
+            <div class="d-flex flex-column justify-content-center align-items-center h-100">
+                <div style="width: 64px; height: 64px;">
+                    <svg viewBox="0 0 21 24">
+                        <path fill="transparent" d="M4.5,19.5A1.5,1.5,0,0,0,6,21H18.08V18H6A1.51,1.51,0,0,0,4.5,19.5Z" transform="translate(-1.5)" />
+                        <path fill="#1296db" d="M21.39,18a1.12,1.12,0,0,0,1.12-1.12V1.13A1.13,1.13,0,0,0,21.38,0H6A4.5,4.5,0,0,0,1.5,4.5v15A4.5,4.5,0,0,0,6,24H21.38a1.13,1.13,0,0,0,1.13-1.13v-.76A1.12,1.12,0,0,0,21.39,21h-.3V18Zm-4.14-4.54-2.93-4h1.79V5h2.3V9.42h1.79ZM13.29,5v8.52H11V8.91L8.94,11.54,6.89,8.91v4.64H4.59V5H6.95l2,3.22,2-3.22Zm4.79,16H6a1.5,1.5,0,0,1,0-3H18.08Z" transform="translate(-1.5)" />
+                    </svg>
+                </div>
+                <div class="w-50">
+                    <div class="progress" style="margin-top: 32px;">
+                        <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">0%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="_framework/blazor.webassembly.js" autostart="false"></script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Material JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="js/material.min.js"></script>
+    <script src="_content/Blazorise.Material/blazorise.material.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+    <script type="text/javascript">
+        window.highlightCode = (id) => {
+            try {
+                hljs.highlightElement(document.getElementById(id));
+            }
+            catch (ex) {
+                console.error(ex);
+            }
+        };
+        window.scrollToName = (name) => {
+            var elements = document.getElementsByName(name);
+            if (elements.length > 0) {
+                elements[0].scrollIntoView();
+            }
+        };
+        (function (l) {
+            if (l.search) {
+                var q = {};
+                l.search.slice(1).split('&').forEach(function (v) {
+                    var a = v.split('=');
+                    q[a[0]] = decodeURIComponent(a[1]);
+                });
+                if (q.redirect !== undefined) {
+                    window.history.replaceState(null, null, redirect);
+                }
+            }
+        }(window.location))
+        var i = 0;
+        var allResourcesBeingLoaded = [];
+        Blazor.start({ // start manually with loadBootResource
+            loadBootResource: function (type, name, defaultUri, integrity) {
+                if (type == "dotnetjs")
+                    return defaultUri;
+
+                var fetchResources = fetch(defaultUri, {
+                    cache: 'no-cache',
+                    integrity: integrity,
+                    headers: { 'MyCustomHeader': 'My custom value' }
+                });
+
+
+                allResourcesBeingLoaded.push(fetchResources);
+                fetchResources.then((r) => {
+                    i++;
+                    var total = allResourcesBeingLoaded.length;
+                    var progressbar = document.getElementById('progressBar');
+                    var value = parseInt((i * 100.0) / total);
+                    var pct = value + '%';
+                    progressbar.style.width = pct;
+                    progressbar.innerText = pct;
+                    console.info(i + '/' + total + ' (' + pct + ') ' + name);
+                });
+                return fetchResources;
+            }
+        });
+    </script>
+</body>
+
+</html>

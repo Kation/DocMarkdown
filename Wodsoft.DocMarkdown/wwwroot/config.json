@@ -1,0 +1,26 @@
+{
+  "Title": "DocMarkdown",
+  "Icon": "log-32.png",
+  "BaseUrl": "",
+  "Path": "docs",
+  "IsRawHtmlEnabled": true,
+  "Languages": [
+    {
+      "Name": "简体中文",
+      "Value": "zh-cn",
+      "CatalogText": "本文内容"
+    },
+    {
+      "Name": "English",
+      "Value": "en-us",
+      "CatalogText": "In this article"
+    }
+  ],
+  "Versions": [
+    {
+      "Name": "DocMarkdown 1.0",
+      "Value": "1.0",
+      "Path": "1.0"
+    }
+  ]
+}

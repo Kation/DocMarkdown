@@ -1,0 +1,34 @@
+{
+  "DocMarkdown简介": {
+    "Path": "index"
+  },
+  "快速使用": {
+    "Path": "quick"
+  },
+  "定制": {
+    "Children": {
+      "样式表": {
+        "Path": "custom/style"
+      },
+      "布局": {
+        "Path": "custom/layout"
+      },
+      "控件": {
+        "Path": "custom/control"
+      }
+    }
+  },
+  "扩展": {
+    "Path": "extend"
+  },
+  "部署": {
+    "Children": {
+      "生成": {
+        "Path": "deploy/build"
+      },
+      "使用Github Pages": {
+        "Path": "deploy/githubpages"
+      }
+    }
+  }
+}

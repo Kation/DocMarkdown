@@ -1,0 +1,15 @@
+﻿@inherits BlockView
+<Table Hoverable>
+    @if (Widths != null)
+    {
+        foreach (var width in Widths)
+        {
+            <col style="width:@(width)%;"/>
+        }
+    }
+    @Content
+</Table>
+@code {
+    [Parameter]
+    public string[] Widths { get; set; }
+}

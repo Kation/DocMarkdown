@@ -1,0 +1,38 @@
+﻿@inject CatalogManager CatelogManager
+@inject IJSRuntime JS
+@inject NavigationManager NavigationManager
+@inject LanguageManager LanguageManager
+<Card Style="width: 240px; margin-right:" Border="Border.Is1">
+    <CardHeader>
+        <Div Flex="Flex.Row.AlignItems.Center">
+            <Icon Name="Blazorise.Icons.Material.MaterialIcons.List" />
+            <Div Flex="Flex.Grow.Is1">
+                <Text TextWeight="TextWeight.Bold">@(LanguageManager.Current?.CatalogText ?? "本文内容")</Text>
+                </Div>
+            </Div>
+        </CardHeader>
+        <CardBody Style="overflow-x: hidden; overflow-y: auto;">
+        @foreach (var item in CatelogManager.Values)
+        {
+            var margin = "margin-left:" + (item.Level - 1) * 14 + "px";
+            <Div Style="@margin">
+                <Blazorise.Link To="#" Clicked="()=>OnLinkClick(item.Anchor)">@item.Name</Blazorise.Link>
+            </Div>
+        }
+    </CardBody>
+</Card>
+@code {
+    protected override void OnInitialized()
+    {
+        CatelogManager.OnChanged += (_, _) =>
+        {
+            StateHasChanged();
+        };
+    }
+
+    private async Task OnLinkClick(string anchor)
+    {
+        await JS.InvokeVoidAsync("scrollToName", anchor);
+        NavigationManager.NavigateTo(NavigationManager.ToBaseRelativePath(NavigationManager.Uri).Split('#')[0] + "#" + anchor, false, true);
+    }
+}

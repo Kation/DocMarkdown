@@ -1,0 +1,38 @@
+﻿@inherits BlockView
+<Heading Size="Size" name="@Anchor">@Content</Heading>
+@if (Level == 1)
+{
+    <PageTitle>@Name</PageTitle>
+}
+@code {
+    [Parameter]
+    public int Level { get; set; }
+
+    [Parameter]
+    public string Anchor { get; set; }
+
+    [Parameter]
+    public string Name { get; set; }
+
+    public HeadingSize Size
+    {
+        get
+        {
+            switch (Level)
+            {
+                case 1:
+                    return HeadingSize.Is1;
+                case 2:
+                    return HeadingSize.Is2;
+                case 3:
+                    return HeadingSize.Is3;
+                case 4:
+                    return HeadingSize.Is4;
+                case 5:
+                    return HeadingSize.Is5;
+                default:
+                    return HeadingSize.Is6;
+            }
+        }
+    }
+}

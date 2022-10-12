@@ -1,0 +1,34 @@
+{
+  "DocMarkdown Introduction": {
+    "Path": "index"
+  },
+  "Quick Useage": {
+    "Path": "quick"
+  },
+  "Custom": {
+    "Children": {
+      "Style Sheet": {
+        "Path": "custom/style"
+      },
+      "Layout": {
+        "Path": "custom/layout"
+      },
+      "Controls": {
+        "Path": "custom/control"
+      }
+    }
+  },
+  "Extension": {
+    "Path": "extend"
+  },
+  "Deploy": {
+    "Children": {
+      "Build": {
+        "Path": "deploy/build"
+      },
+      "Work with Github Pages": {
+        "Path": "deploy/githubpages"
+      }
+    }
+  }
+}

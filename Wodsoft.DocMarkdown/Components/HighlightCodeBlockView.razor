@@ -1,0 +1,18 @@
+﻿@inherits InlineView
+@inject IJSRuntime JS
+<pre><code id="@_id" class="language-@Language">
+@Content
+</code></pre>
+@code {
+    [Parameter]
+    public string Language { get; set; }
+
+    private string _id = "code_" + Guid.NewGuid();
+
+    private bool _isRendered;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JS.InvokeVoidAsync("highlightCode", _id);
+    }
+}

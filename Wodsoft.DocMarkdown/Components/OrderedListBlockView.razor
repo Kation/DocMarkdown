@@ -1,0 +1,8 @@
+﻿@inherits BlockView
+<OrderedList start="@Start">
+    @Content
+</OrderedList>
+@code {
+    [Parameter]
+    public string Start { get; set; }
+}

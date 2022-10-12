@@ -1,0 +1,77 @@
+﻿@inject CatalogManager CatalogManager
+<Layout Sider>
+    <Layout Background="Background.White">
+        <LayoutContent Class="markdown" Padding="Padding.Is3">
+            @Content
+        </LayoutContent>
+    </Layout>
+    <LayoutSider Background="Background.White">
+        <LayoutSiderContent ElementId="categoryContent">
+            <Div @ref="_catalogDiv" ElementId="categoryDiv" Position="Position.Fixed" Display="Display.Flex.ReverseColumn.Block.OnFullHD" Flex="Flex.ReverseColumn">
+                <CatalogView />
+            </Div>
+            <Div Position="Position.Fixed" Style="bottom: 32px; right: 32px; width: 48px; height: 48px; cursor: pointer;"
+                 Flex="Flex.JustifyContent.Center.AlignItems.Center" Border="Border.RoundedCircle.Is2.OnAll"
+                 Display="Display.None.OnFullHD"
+                 Background="Background.Light"
+                 @onclick="CategoryClick">
+                <Icon Name="Blazorise.Icons.Material.MaterialIcons.List" IconSize="IconSize.x2" />
+            </Div>
+        </LayoutSiderContent>
+    </LayoutSider>
+</Layout>
+<style type="text/css">
+    @@media (min-width: 1200px) {
+        #categoryContent {
+            width: 250px;
+        }
+
+        #categoryDiv {
+            top: 0;
+            bottom: 0;
+            right: 10px;
+        }
+
+            #categoryDiv .card {
+                margin-top: 10px;
+                margin-bottom: 10px;
+                max-height: calc(100% - 20px);
+            }
+    }
+
+    @@media (max-width: 1199px) {
+        #categoryDiv {
+            top: 70px;
+            right: 32px;
+            bottom: 96px;
+        }
+
+            #categoryDiv .card {
+                max-height: 100%;
+            }
+
+            #categoryDiv.hide {
+                display: none !important;
+            }
+    }
+</style>
+@code {
+    [Parameter]
+    public RenderFragment Content { get; set; }
+
+    private Div _catalogDiv;
+
+    private void CategoryClick()
+    {
+        CatalogManager.Clear();
+        if (_catalogDiv.Class == null)
+            _catalogDiv.Class = "hide";
+        else
+            _catalogDiv.Class = null;
+    }
+
+    protected override void OnInitialized()
+    {
+        CatalogManager.Clear();
+    }
+}

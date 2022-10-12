@@ -1,0 +1,42 @@
+﻿@inherits BlockView
+@if (IsHeader)
+{
+    <TableHeaderCell ColumnSpan="ColumnSpan" RowSpan="RowSpan" TextAlignment="Alignment">
+        @Content
+    </TableHeaderCell>
+}
+else
+{
+    <TableRowCell ColumnSpan="ColumnSpan" RowSpan="RowSpan" TextAlignment="Alignment">
+        @Content
+    </TableRowCell>
+}
+@code {
+    [Parameter]
+    public bool IsHeader { get; set; }
+
+    [Parameter]
+    public int ColumnSpan { get; set; } = 1;
+
+    [Parameter]
+    public int RowSpan { get; set; } = 1;
+
+    [Parameter]
+    public Markdig.Extensions.Tables.TableColumnAlign Align { get; set; }
+
+    private TextAlignment Alignment
+    {
+        get
+        {
+            switch (Align)
+            {
+                case Markdig.Extensions.Tables.TableColumnAlign.Left:
+                    return TextAlignment.Start;
+                case Markdig.Extensions.Tables.TableColumnAlign.Right:
+                    return TextAlignment.End;
+                default:
+                    return TextAlignment.Center;
+            }
+        }
+    }
+}

@@ -1,0 +1,190 @@
+﻿@using Blazorise.TreeView
+<link href="_content/Blazorise.TreeView/blazorise.treeview.css" rel="stylesheet" />
+<BarBrand>
+    <BarItem>
+        <Div Flex="Flex.Row.JustifyContent.Center.AlignItems.Center">
+            @if (!string.IsNullOrEmpty(DocEngine.Icon))
+            {
+                <Image Source="@DocEngine.Icon" Style="width: 24px; height: 24px; margin-right: 10px;"></Image>
+            }
+            <Text Style="font-size: 20px;">@DocEngine.Title</Text>
+        </Div>
+    </BarItem>
+</BarBrand>
+<BarMenu>
+    <BarStart>
+        <BarItem Style="padding-left: 10px; padding-right: 10px;">
+            @if (VersionManager.IsEnabled)
+            {
+                <Div Flex="Flex.Row.AlignItems.Center">
+                    <Icon Name="Blazorise.Icons.Material.MaterialIcons.Code" Style="margin-right: 4px;" />
+                    <Div Flex="Flex.Grow.Is1">
+                        <SelectList TItem="DocVersion"
+                                TValue="string"
+                                Data="@versions"
+                                TextField="@((item)=>item.Name)"
+                                ValueField="@((item)=>item.Value)"
+                                SelectedValue="@selectedVersion"
+                                SelectedValueChanged="@VersionChangedHandler" />
+                    </Div>
+                </Div>
+            }
+        </BarItem>
+    </BarStart>
+    <BarItem Flex="Flex.Grow.Is1" Style="margin-left: 5px; margin-right: 5px; overflow-y: auto; overflow-x: clip;">
+        <TreeView Nodes="NavManager.Navs?.Items"
+                  GetChildNodes="@(item => item!.Children)"
+                  HasChildNodes="@(item => item!.Children.Count != 0)"
+                  @bind-SelectedNode="SelectNode"
+                  @bind-ExpandedNodes="expandedNodes"
+                  Margin="Margin.Is0">
+            <NodeContent>@context!.Name</NodeContent>
+        </TreeView>
+    </BarItem>
+    @if (LanguageManager.IsEnabled)
+    {
+        <BarEnd>
+            <BarItem Flex="Flex.Row.AlignItems.Center" Style="padding-left: 10px; padding-right: 10px;">
+                <Icon Name="Blazorise.Icons.Material.MaterialIcons.Language" Style="margin-right: 4px;" />
+                <Div Flex="Flex.Grow.Is1">
+                    <SelectList TItem="DocLanguage"
+                            TValue="string"
+                            Data="@languages"
+                            TextField="@((item)=>item.Name)"
+                            ValueField="@((item)=>item.Value)"
+                            SelectedValue="@selectedLanguage"
+                            SelectedValueChanged="@LanguageChangedHandler" />
+                </Div>
+            </BarItem>
+        </BarEnd>
+    }
+</BarMenu>
+
+@code {
+    [Inject]
+    public NavManager NavManager { get; set; }
+
+    [Inject]
+    public DocEngine DocEngine { get; set; }
+
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+
+    [Inject]
+    public VersionManager VersionManager { get; set; }
+
+    [Inject]
+    public LanguageManager LanguageManager { get; set; }
+
+    private NavItem _selectNode;
+    private NavItem SelectNode
+    {
+        get => _selectNode; set
+        {
+            _selectNode = value;
+            if (value != NavManager.Current && !string.IsNullOrEmpty(value.Path))
+            {
+                var path = value.Path;
+                if (path.EndsWith("/index", StringComparison.OrdinalIgnoreCase))
+                {
+                    path = path.Substring(0, path.Length - 5);
+                }
+                else if (path.Equals("index", StringComparison.OrdinalIgnoreCase))
+                {
+                    path = string.Empty;
+                }
+                if (LanguageManager.IsEnabled)
+                    path = LanguageManager.Current.Value + "/" + path;
+                if (VersionManager.IsEnabled)
+                {
+                    if (VersionManager.Current != VersionManager.Versions[0])
+                        path += "?version=" + VersionManager.Current.Value;
+                    else if (NavigationManager.Uri.IndexOf('?') != -1)
+                    {
+                        var values = System.Web.HttpUtility.ParseQueryString(NavigationManager.Uri.Split('?')[1]);
+                        if (values["version"] != null)
+                            path += "?version=" + VersionManager.Current.Value;
+                    }
+                }
+                NavigationManager.NavigateTo(path, false);
+            }
+        }
+    }
+
+    private IList<NavItem> expandedNodes = new List<NavItem>();
+    private IReadOnlyCollection<DocVersion> versions;
+    private string selectedVersion, selectedLanguage;
+    private IReadOnlyCollection<DocLanguage> languages;
+
+    protected override void OnInitialized()
+    {
+        var item = NavManager.Current;
+        if (item != null)
+        {
+            SelectNode = item;
+            while (item.Parent != null)
+            {
+                item = item.Parent;
+                expandedNodes.Add(item);
+            }
+        }
+        if (VersionManager.IsEnabled)
+        {
+            versions = VersionManager.Versions;
+            selectedVersion = VersionManager.Current.Value;
+        }
+        if (LanguageManager.IsEnabled)
+        {
+            languages = LanguageManager.Languages;
+            selectedLanguage = LanguageManager.Current.Value;
+        }
+    }
+
+    void VersionChangedHandler(string newValue)
+    {
+        selectedVersion = newValue;
+        VersionManager.Current = VersionManager.Versions.First(t => t.Value == newValue);
+        var path = _selectNode.Path;
+        if (path.EndsWith("/index", StringComparison.OrdinalIgnoreCase))
+        {
+            path = path.Substring(0, path.Length - 5);
+        }
+        else if (path.Equals("index", StringComparison.OrdinalIgnoreCase))
+        {
+            path = string.Empty;
+        }
+        if (LanguageManager.IsEnabled)
+            path = LanguageManager.Current.Value + "/" + path;
+        path += "?version=" + newValue;
+        NavigationManager.NavigateTo(path, false);
+    }
+
+    async Task LanguageChangedHandler(string newValue)
+    {
+        selectedLanguage = newValue;
+        var path = _selectNode.Path;
+        if (path.EndsWith("/index", StringComparison.OrdinalIgnoreCase))
+        {
+            path = path.Substring(0, path.Length - 5);
+        }
+        else if (path.Equals("index", StringComparison.OrdinalIgnoreCase))
+        {
+            path = string.Empty;
+        }
+        path = newValue + "/" + path;
+        if (VersionManager.IsEnabled)
+        {
+            if (VersionManager.Current != VersionManager.Versions[0])
+                path += "?version=" + VersionManager.Current.Value;
+            else if (NavigationManager.Uri.IndexOf('?') != -1)
+            {
+                var values = System.Web.HttpUtility.ParseQueryString(NavigationManager.Uri.Split('?')[1]);
+                if (values["version"] != null)
+                    path += "?version=" + VersionManager.Current.Value;
+            }
+        }
+        var lang = LanguageManager.Languages.FirstOrDefault(t => t.Value.Equals(newValue, StringComparison.OrdinalIgnoreCase));
+        await NavManager.LoadAsync(lang.Value.AsMemory(), VersionManager.Current?.Path.AsMemory() ?? ReadOnlyMemory<char>.Empty);
+        NavigationManager.NavigateTo(path, false);
+    }
+}

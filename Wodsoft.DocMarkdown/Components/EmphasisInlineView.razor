@@ -1,0 +1,13 @@
+﻿@inherits BlockView
+@if (IsDouble)
+{
+    <em>@Content</em>
+}
+else
+{
+    <strong>@Content</strong>
+}
+@code {
+    [Parameter]
+    public bool IsDouble { get; set; }
+}

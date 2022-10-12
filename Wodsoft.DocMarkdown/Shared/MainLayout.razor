@@ -1,0 +1,41 @@
+﻿@inherits LayoutComponentBase
+@inject DocEngine DocEngine
+<Layout Sider>
+    <LayoutSider Background="Background.White" Shadow="Shadow.Small">
+        <LayoutSiderContent>
+            <Bar @ref="_sidebar" Mode="BarMode.VerticalPopout"
+                 CollapseMode="BarCollapseMode.Hide"
+                 Breakpoint="Breakpoint.Desktop">
+                <NavMenu />
+            </Bar>
+        </LayoutSiderContent>
+    </LayoutSider>
+    <Layout Background="Background.White">
+        <LayoutHeader Fixed>
+            <Bar Mode="BarMode.Horizontal"
+                 Display="Display.Flex.Row.None.OnWidescreen"
+                 Background="Background.Light"
+                 ThemeContrast="ThemeContrast.Light">
+                <BarToggler Bar="@_sidebar" />
+                <BarBrand>
+                    <BarItem>
+                        <BarLink To="#">
+                            @if (!string.IsNullOrEmpty(DocEngine.Icon))
+                            {
+                                <Image Source="@DocEngine.Icon" Style="width: 24px; height: 24px;"></Image>
+                            }
+                            <Text>@DocEngine.Title</Text>
+                        </BarLink>
+                    </BarItem>
+                </BarBrand>
+                <BarBrand></BarBrand>
+            </Bar>
+        </LayoutHeader>
+        <LayoutContent>
+            @Body
+        </LayoutContent>
+    </Layout>
+</Layout>
+@code {
+    private Bar _sidebar;
+}

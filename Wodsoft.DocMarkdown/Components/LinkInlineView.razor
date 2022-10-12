@@ -1,0 +1,33 @@
+﻿@inherits BlockView
+@inject IJSRuntime JS
+@inject NavigationManager NavigationManager
+<Link To="@BindUrl" Title="@Title" @onclick="OnLinkClick">@Content</Link>
+@code {
+    [Parameter]
+    public string Url { get; set; }
+
+    [Parameter]
+    public string Title { get; set; }
+
+    private async Task OnLinkClick()
+    {
+        if (Url.StartsWith('#'))
+        {
+            await JS.InvokeVoidAsync("scrollToName", Url.Substring(1));
+            NavigationManager.NavigateTo(NavigationManager.ToBaseRelativePath(NavigationManager.Uri).Split('#')[0] + Url, false, true);
+        }
+    }
+
+    private string BindUrl
+    {
+        get
+        {
+            if (Url.StartsWith('#'))
+            {
+                return "#";
+            }
+            else
+                return Url;
+        }
+    }
+}
