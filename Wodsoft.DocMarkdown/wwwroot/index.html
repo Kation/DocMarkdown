@@ -89,6 +89,7 @@
                 const fetchResources = fetch(defaultUri, { cache: 'no-cache' });
                 allResourcesBeingLoaded.push(fetchResources);
                 return fetchResources.then(async (r) => {
+                    const originalResponseBuffer = await r.arrayBuffer();
                     i++;
                     var total = allResourcesBeingLoaded.length;
                     var progressbar = document.getElementById('progressBar');
@@ -99,7 +100,6 @@
                     console.info(i + '/' + total + ' (' + pct + ') ' + name);
 
                     if (location.hostname !== 'localhost') {
-                        const originalResponseBuffer = await r.arrayBuffer();
                         const originalResponseArray = new Int8Array(originalResponseBuffer);
                         const decompressedResponseArray = BrotliDecode(originalResponseArray);
                         const contentType = type ===

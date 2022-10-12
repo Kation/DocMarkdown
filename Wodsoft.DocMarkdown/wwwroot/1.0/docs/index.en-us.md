@@ -7,4 +7,4 @@ Support local or cross domain `Markdown` documents.
 It can deploy to static file server which support 404 redirect like `Github Pages`.
 
 
-Github url: https://github.com/Kation/DocMarkdown
+Github url: [DocMarkdown](https://github.com/Kation/DocMarkdown)

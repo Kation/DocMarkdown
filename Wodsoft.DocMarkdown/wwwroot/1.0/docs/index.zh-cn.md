@@ -6,4 +6,4 @@
 支持浏览本网站或跨域的`Markdown`文档。  
 可以部署至静态文件服务器，例如`Github Pages`。
 
-Github地址：https://github.com/Kation/DocMarkdown
+Github地址：[DocMarkdown](https://github.com/Kation/DocMarkdown)
