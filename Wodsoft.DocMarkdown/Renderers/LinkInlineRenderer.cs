@@ -13,7 +13,7 @@ namespace Wodsoft.DocMarkdown.Renderers
                 if (markdown.IsImage)
                 {
                     builder.OpenComponent<ImageInlineView>(0);
-                    builder.AddAttribute(1, nameof(LinkInlineView.Url), markdown.Url);
+                    builder.AddAttribute(1, nameof(LinkInlineView.Url), context.GetRelativePath(markdown.Url));
                     builder.AddAttribute(2, nameof(LinkInlineView.Title), markdown.Title);
                     builder.CloseComponent();
                 }

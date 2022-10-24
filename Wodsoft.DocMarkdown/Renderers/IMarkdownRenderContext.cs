@@ -14,5 +14,7 @@ namespace Wodsoft.DocMarkdown.Renderers
         RenderFragment RenderInline(ContainerInline containerInline);
 
         RenderFragment RenderBlock(ContainerBlock containerBlock);
+
+        string GetRelativePath(string path);
     }
 }

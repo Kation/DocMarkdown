@@ -31,6 +31,7 @@ namespace Wodsoft.DocMarkdown.Services
         private readonly CatalogManager _catelogManager;
         private readonly DocConfig _config;
         private readonly HttpClient _httpClient;
+        private string _currentPath;
 
         public DocEngine(NavManager navManager, LanguageManager languageManager, VersionManager versionManager, CatalogManager catalogManager, DocConfig config, HttpClient httpClient)
         {
@@ -91,6 +92,7 @@ namespace Wodsoft.DocMarkdown.Services
                     realPath = _config.Path + "/" + realPath;
                 if (_versionManager.IsEnabled)
                     realPath = _versionManager.Current.Path + "/" + realPath;
+                _currentPath = realPath;
                 var mdResponse = await _httpClient.GetAsync(realPath);
                 if (mdResponse.StatusCode != System.Net.HttpStatusCode.OK)
                 {
@@ -246,6 +248,36 @@ namespace Wodsoft.DocMarkdown.Services
         public void AddRenderer(MarkdownRenderer renderer)
         {
             _renderers.Add(renderer);
+        }
+
+        public string GetRelativePath(string path)
+        {
+            string prefix;
+            List<string> paths;
+            if (_currentPath.StartsWith('/'))
+            {
+                prefix = string.Empty;
+                paths = new List<string>(_currentPath.Split('/', StringSplitOptions.RemoveEmptyEntries));
+            }
+            else
+            {
+                var uri = new Uri(path);
+                prefix = uri.Scheme + "://" +  uri.Host;
+                if (!uri.IsDefaultPort)
+                    prefix += ":" + uri.Port;
+                paths = new List<string>(uri.PathAndQuery.Split('/', StringSplitOptions.RemoveEmptyEntries));
+            }
+            var targetPaths = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            for(int i = 0; i < targetPaths.Length; i++)
+            {
+                if (targetPaths[i] == "..")
+                {
+                    if (paths.Count > 0)
+                        paths.RemoveAt(paths.Count - 1);
+                }
+                paths.Add(targetPaths[i]);
+            }
+            return prefix + string.Join('/', paths);
         }
     }
 }
