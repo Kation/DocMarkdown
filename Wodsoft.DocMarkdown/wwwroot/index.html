@@ -76,8 +76,8 @@
                 }
             }
         }(window.location))
-        var i = 0;
-        var allResourcesBeingLoaded = [];
+        var total = 0;
+        var receivedLength = 0;
         Blazor.start({ // start manually with loadBootResource
             loadBootResource: function (type, name, defaultUri, integrity) {
                 if (type == "dotnetjs")
@@ -87,32 +87,59 @@
                     defaultUri = defaultUri + '.br';
 
                 const fetchResources = fetch(defaultUri, { cache: 'no-cache' });
-                allResourcesBeingLoaded.push(fetchResources);
                 return fetchResources.then(async (r) => {
-                    const originalResponseBuffer = await r.arrayBuffer();
-                    i++;
-                    var total = allResourcesBeingLoaded.length;
+                    const reader = r.body.getReader();
+                    let length = +r.headers.get('Content-Length');
+                    total += length;
                     var progressbar = document.getElementById('progressBar');
-                    var value = parseInt((i * 100.0) / total);
-                    var pct = value + '%';
-                    progressbar.style.width = pct;
-                    progressbar.innerText = pct;
-                    console.info(i + '/' + total + ' (' + pct + ') ' + name);
-
+                    let dataLength = 0;
+                    let dataArray = [];
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) {
+                            break;
+                        }
+                        dataArray.push(value);
+                        dataLength += value.length;
+                        receivedLength += value.length;
+                        const percent = Math.round(receivedLength / total * 100)
+                        var pct = percent + '%';
+                        progressbar.style.width = pct;
+                        progressbar.innerText = pct + ' ' + calcSize(receivedLength) + '/' + calcSize(total);
+                        console.log('Received: ' + name + ',' + calcSize(dataLength) + '/' + calcSize(length));
+                    }
+                    let data = new Uint8Array(dataLength);
+                    let position = 0;
+                    for (let array of dataArray) {
+                        data.set(array, position);
+                        position += array.length;
+                    }
+                    const contentType = type ===
+                        'dotnetwasm' ? 'application/wasm' : 'application/octet-stream';
                     if (location.hostname !== 'localhost') {
-                        const originalResponseArray = new Int8Array(originalResponseBuffer);
-                        const decompressedResponseArray = BrotliDecode(originalResponseArray);
-                        const contentType = type ===
-                            'dotnetwasm' ? 'application/wasm' : 'application/octet-stream';
+                        const decompressedResponseArray = BrotliDecode(data);
                         return new Response(decompressedResponseArray,
                             { headers: { 'content-type': contentType } });
                     }
                     else
-                        return r;
+                        return new Response(data,
+                            { headers: { 'content-type': contentType } });
                 });
                 return fetchResources;
             }
         });
+
+        function calcSize(bytes) {
+            if (bytes > 1024 * 1024) {
+                return Math.round(bytes / 1024 / 1024 * 100) / 100 + 'MB';
+            }
+            else if (bytes > 1024) {
+                return Math.round(bytes / 1024 * 100) / 100 + 'KB';
+            }
+            else {
+                return bytes + 'B';
+            }
+        }
     </script>
 </body>
 
