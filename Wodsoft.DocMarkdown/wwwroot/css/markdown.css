@@ -28,6 +28,14 @@
     font-weight: 600;
 }
 
-.markdown img{
+.markdown img {
     max-width: 100%;
+}
+
+.tree-view > div {
+    clear: both
+}
+
+.tree-view-icon i.material-icons {
+    font-size: 1.25rem !important;
 }
