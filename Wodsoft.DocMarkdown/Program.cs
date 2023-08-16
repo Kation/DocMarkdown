@@ -1,4 +1,4 @@
-using Blazorise;
+﻿using Blazorise;
 using Blazorise.Icons.Material;
 using Blazorise.Material;
 using Blazorise.TreeView;
@@ -17,7 +17,10 @@ var httpClient = new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.
 var configResponse = await httpClient.GetAsync("config.json");
 if (!configResponse.IsSuccessStatusCode)
     throw new FileNotFoundException("Could not load config.json.");
-var config = await configResponse.Content.ReadFromJsonAsync<DocConfig>();
+var config = await configResponse.Content.ReadFromJsonAsync<DocConfig>(new System.Text.Json.JsonSerializerOptions
+{
+    TypeInfoResolver = SourceGenerationContext.Default
+});
 HttpClient docClient;
 string baseUrl;
 if (config!.BaseUrl == "")

@@ -42,7 +42,10 @@ namespace Wodsoft.DocMarkdown.Services
                 Navs = null;
                 return;
             }
-            var navs = await navResponse.Content.ReadFromJsonAsync<Dictionary<string, NavConfig>>();
+            var navs = await navResponse.Content.ReadFromJsonAsync<Dictionary<string, NavConfig>>(new System.Text.Json.JsonSerializerOptions
+            {
+                TypeInfoResolver = SourceGenerationContext.Default
+            });
             List<NavItem> allItems = new List<NavItem>();
             List<NavItem> items = new List<NavItem>();
             foreach (var nav in navs!)
