@@ -1,6 +1,8 @@
 ﻿@inherits BlockView
 @inject IJSRuntime JS
 @inject NavigationManager NavigationManager
+@inject LanguageManager LanguageManager
+@inject VersionManager VersionManager
 <Link To="@BindUrl" Title="@Title" @onclick="OnLinkClick">@Content</Link>
 @code {
     [Parameter]
@@ -16,6 +18,19 @@
             await JS.InvokeVoidAsync("scrollToName", Url.Substring(1));
             NavigationManager.NavigateTo(NavigationManager.ToBaseRelativePath(NavigationManager.Uri).Split('#')[0] + Url, false, true);
         }
+        else if (Url.StartsWith("/"))
+        {
+            var path = Url;
+            if (LanguageManager.IsEnabled)
+            {
+                path = LanguageManager.Current.Value + path;
+            }
+            if (VersionManager.IsEnabled)
+            {
+                path += "?version=" + VersionManager.Current.Value;
+            }
+            NavigationManager.NavigateTo(path, false);
+        }
     }
 
     private string BindUrl
@@ -23,6 +38,10 @@
         get
         {
             if (Url.StartsWith('#'))
+            {
+                return "#";
+            }
+            else if (Url.StartsWith("/") && !Url.StartsWith("//"))
             {
                 return "#";
             }
