@@ -32,10 +32,10 @@
     max-width: 100%;
 }
 
-.tree-view > div {
+.b-tree-view-node > div {
     clear: both
 }
 
-.tree-view-icon i.material-icons {
+.b-tree-view-node-icon i.material-icons {
     font-size: 1.25rem !important;
 }

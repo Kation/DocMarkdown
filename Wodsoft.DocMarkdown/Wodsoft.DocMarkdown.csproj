@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <PublishTrimmed>true</PublishTrimmed>
     <InvariantGlobalization>true</InvariantGlobalization>
@@ -10,17 +10,16 @@
     <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
     <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
     <UseNativeHttpHandler>true</UseNativeHttpHandler>
-    <TrimMode>link</TrimMode>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Blazorise.Components" Version="1.1.3.1" />
-    <PackageReference Include="Blazorise.Icons.Material" Version="1.1.3.1" />
-    <PackageReference Include="Blazorise.Material" Version="1.1.3.1" />
-    <PackageReference Include="Blazorise.TreeView" Version="1.1.3.1" />
-    <PackageReference Include="Markdig" Version="0.30.4" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.8" PrivateAssets="all" />
+    <PackageReference Include="Blazorise.Components" Version="1.2.5" />
+    <PackageReference Include="Blazorise.Icons.Material" Version="1.2.5" />
+    <PackageReference Include="Blazorise.Material" Version="1.2.5" />
+    <PackageReference Include="Blazorise.TreeView" Version="1.2.5" />
+    <PackageReference Include="Markdig" Version="0.32.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.10" PrivateAssets="all" />
   </ItemGroup>
-
+  
 </Project>
