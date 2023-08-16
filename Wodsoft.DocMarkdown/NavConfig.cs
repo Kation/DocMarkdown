@@ -27,7 +27,9 @@ namespace Wodsoft.DocMarkdown
         public NavItem(string name, string path, NavItem parent)
         {
             Name = name;
-            Path = path;
+            if (path != null && path.EndsWith("/"))
+                path += "index";
+            Path = path;            
             _children = new List<NavItem>();
             Children = new ReadOnlyCollection<NavItem>(_children);
             if (parent != null)
