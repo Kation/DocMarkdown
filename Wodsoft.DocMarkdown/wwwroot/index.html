@@ -64,6 +64,12 @@
                 elements[0].scrollIntoView();
             }
         };
+        window.scrollToId = (id) => {
+            var element = document.getElementById(id);
+            if (element != null) {
+                element.scrollIntoView();
+            }
+        };
         (function (l) {
             if (l.search) {
                 var q = {};

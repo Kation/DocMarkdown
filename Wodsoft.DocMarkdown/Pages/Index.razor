@@ -1,13 +1,13 @@
 ﻿@inject CatalogManager CatalogManager
 <Layout Sider>
-    <Layout Background="Background.White">
+    <Layout Background="Background.White" ElementId="markdownRoot">
         <LayoutContent Class="markdown" Padding="Padding.Is3">
             @Content
         </LayoutContent>
     </Layout>
     <LayoutSider Background="Background.White">
         <LayoutSiderContent ElementId="categoryContent">
-            <Div @ref="_catalogDiv" ElementId="categoryDiv" Position="Position.Fixed" Display="Display.Flex.ReverseColumn.Block.OnFullHD" Flex="Flex.ReverseColumn">
+            <Div Class="@_catalogClass" ElementId="categoryDiv" Position="Position.Fixed" Display="Display.Flex.ReverseColumn.Block.OnFullHD" Flex="Flex.ReverseColumn">
                 <CatalogView />
             </Div>
             <Div Position="Position.Fixed" Style="bottom: 32px; right: 32px; width: 48px; height: 48px; cursor: pointer;"
@@ -55,23 +55,29 @@
             }
     }
 </style>
+@inject IJSRuntime JsRuntime
 @code {
     [Parameter]
     public RenderFragment Content { get; set; }
 
-    private Div _catalogDiv;
+    private string _catalogClass;
 
     private void CategoryClick()
     {
         CatalogManager.Clear();
-        if (_catalogDiv.Class == null)
-            _catalogDiv.Class = "hide";
+        if (_catalogClass == null)
+            _catalogClass = "hide";
         else
-            _catalogDiv.Class = null;
+            _catalogClass = null;
     }
 
     protected override void OnInitialized()
     {
         CatalogManager.Clear();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JsRuntime.InvokeVoidAsync("scrollToId", "markdownRoot");
     }
 }
