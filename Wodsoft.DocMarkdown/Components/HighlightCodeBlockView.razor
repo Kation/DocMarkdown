@@ -9,8 +9,6 @@
 
     private string _id = "code_" + Guid.NewGuid();
 
-    private bool _isRendered;
-
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         await JS.InvokeVoidAsync("highlightCode", _id);
