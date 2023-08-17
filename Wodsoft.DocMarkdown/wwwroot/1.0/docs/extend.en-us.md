@@ -86,3 +86,6 @@ engine.AddRenderer(new ThematicBreakBlockRenderer());
 
 ### Literal
 `LiteralInlineRenderer` used to present normal literal.
+
+### Custom Container
+`CustomContainerRenderer` used to present [`Markdown Custom Container`](https://talk.commonmark.org/t/custom-container-for-block-and-inline/2051).
