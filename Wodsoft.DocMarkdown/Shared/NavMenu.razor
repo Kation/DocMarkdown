@@ -20,12 +20,12 @@
                     <Icon Name="Blazorise.Icons.Material.MaterialIcons.Code" Style="margin-right: 4px;" />
                     <Div Flex="Flex.Grow.Is1">
                         <SelectList TItem="DocVersion"
-                                TValue="string"
-                                Data="@versions"
-                                TextField="@((item)=>item.Name)"
-                                ValueField="@((item)=>item.Value)"
-                                SelectedValue="@selectedVersion"
-                                SelectedValueChanged="@VersionChangedHandler" />
+                                    TValue="string"
+                                    Data="@versions"
+                                    TextField="@((item)=>item.Name)"
+                                    ValueField="@((item)=>item.Value)"
+                                    SelectedValue="@selectedVersion"
+                                    SelectedValueChanged="@VersionChangedHandler" />
                     </Div>
                 </Div>
             }
@@ -37,7 +37,8 @@
                   HasChildNodes="@(item => item!.Children.Count != 0)"
                   @bind-SelectedNode="SelectNode"
                   @bind-ExpandedNodes="expandedNodes"
-                  Margin="Margin.Is0">
+                  Margin="Margin.Is0"
+                  @ref="_treeView">
             <NodeContent>@context!.Name</NodeContent>
         </TreeView>
     </BarItem>
@@ -48,12 +49,12 @@
                 <Icon Name="Blazorise.Icons.Material.MaterialIcons.Language" Style="margin-right: 4px;" />
                 <Div Flex="Flex.Grow.Is1">
                     <SelectList TItem="DocLanguage"
-                            TValue="string"
-                            Data="@languages"
-                            TextField="@((item)=>item.Name)"
-                            ValueField="@((item)=>item.Value)"
-                            SelectedValue="@selectedLanguage"
-                            SelectedValueChanged="@LanguageChangedHandler" />
+                                TValue="string"
+                                Data="@languages"
+                                TextField="@((item)=>item.Name)"
+                                ValueField="@((item)=>item.Value)"
+                                SelectedValue="@selectedLanguage"
+                                SelectedValueChanged="@LanguageChangedHandler" />
                 </Div>
             </BarItem>
         </BarEnd>
@@ -115,6 +116,7 @@
     private IReadOnlyCollection<DocVersion> versions;
     private string selectedVersion, selectedLanguage;
     private IReadOnlyCollection<DocLanguage> languages;
+    private TreeView<NavItem> _treeView;
 
     protected override void OnInitialized()
     {
@@ -138,6 +140,29 @@
             languages = LanguageManager.Languages;
             selectedLanguage = LanguageManager.Current.Value;
         }
+        NavManager.NavItemChanged += NavItemChanged;
+    }
+
+    void NavItemChanged(object sender, NavItemChangedEventArgs e)
+    {
+        bool expandedChanged = false;
+        var parent = e.Item.Parent;
+        while (parent != null)
+        {
+            if (!expandedNodes.Contains(parent))
+            {
+                expandedNodes.Add(parent);
+                parent = parent.Parent;
+                expandedChanged = true;
+                continue;
+            }
+            break;
+        }
+        if (expandedChanged)
+        {
+            _treeView.Reload();
+        }
+        _treeView.SelectNode(e.Item);
     }
 
     void VersionChangedHandler(string newValue)

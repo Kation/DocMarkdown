@@ -64,6 +64,7 @@ namespace Wodsoft.DocMarkdown.Services
             if (nav == null)
                 return false;
             Current = nav;
+            NavItemChanged?.Invoke(this, new NavItemChangedEventArgs(nav));
             return true;
         }
 
@@ -76,5 +77,7 @@ namespace Wodsoft.DocMarkdown.Services
                     Convert(child.Key, child.Value, items, item);
             return item;
         }
+
+        public event EventHandler<NavItemChangedEventArgs> NavItemChanged;
     }
 }

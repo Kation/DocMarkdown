@@ -3,13 +3,21 @@
 @inject NavigationManager NavigationManager
 @inject LanguageManager LanguageManager
 @inject VersionManager VersionManager
-<Link To="@BindUrl" Title="@Title" @onclick="OnLinkClick">@Content</Link>
+<a href="@BindUrl" title="@Title" target="_blank" @onclick="@OnLinkClick" @onclick:preventDefault="@PreventDefault">@Content</a>
 @code {
     [Parameter]
     public string Url { get; set; }
 
     [Parameter]
     public string Title { get; set; }
+
+    private bool PreventDefault
+    {
+        get
+        {
+            return Url.StartsWith('#') || (Url.StartsWith("/") && !Url.StartsWith("//"));
+        }
+    }
 
     private async Task OnLinkClick()
     {
@@ -39,14 +47,32 @@
         {
             if (Url.StartsWith('#'))
             {
-                return "#";
+                if (NavigationManager.Uri.Contains("#"))
+                    return NavigationManager.Uri.Substring(0, NavigationManager.Uri.IndexOf('#')) + Url;
+                else
+                    return NavigationManager.Uri + Url;
             }
             else if (Url.StartsWith("/") && !Url.StartsWith("//"))
             {
-                return "#";
+                var path = Url;
+                if (LanguageManager.IsEnabled)
+                {
+                    path = LanguageManager.Current.Value + path;
+                }
+                if (VersionManager.IsEnabled)
+                {
+                    path += "?version=" + VersionManager.Current.Value;
+                }
+                return path;
             }
             else
                 return Url;
         }
+    }
+
+    private bool OnMatch(string url)
+    {
+        return false;
+        //return !Url.StartsWith('#') && (Url.StartsWith("/") && !Url.StartsWith("//"));
     }
 }
