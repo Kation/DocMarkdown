@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.AspNetCore.Components.RenderTree;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Net.Http.Json;
 using System.Reflection;
@@ -33,6 +35,12 @@ namespace Wodsoft.DocMarkdown.Services
         private readonly HttpClient _httpClient;
         private string _currentPath;
 
+        [DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(MainLayout))]
+        [DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(Blazorise.Modules.JSUtilitiesModule))]
+        [DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(Blazorise.Modules.JSBreakpointModule))]
+        [DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(Blazorise.Modules.JSTableModule))]
+        [DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(Blazorise.Modules.JSDragDropModule))]
+        [DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(Blazorise.Bootstrap.BarToggler))]
         public DocEngine(NavManager navManager, LanguageManager languageManager, VersionManager versionManager, CatalogManager catalogManager, DocConfig config, HttpClient httpClient)
         {
             _navManager = navManager;
@@ -191,7 +199,7 @@ namespace Wodsoft.DocMarkdown.Services
         private List<MarkdownRenderer> _renderers = new List<MarkdownRenderer>();
         private object Render(MarkdownObject markdownObject)
         {
-            foreach(var renderer in _renderers)
+            foreach (var renderer in _renderers)
             {
                 if (renderer.CanRender(markdownObject))
                 {
@@ -262,13 +270,13 @@ namespace Wodsoft.DocMarkdown.Services
             else
             {
                 var uri = new Uri(path);
-                prefix = uri.Scheme + "://" +  uri.Host;
+                prefix = uri.Scheme + "://" + uri.Host;
                 if (!uri.IsDefaultPort)
                     prefix += ":" + uri.Port;
                 paths = new List<string>(uri.PathAndQuery.Split('/', StringSplitOptions.RemoveEmptyEntries));
             }
             var targetPaths = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
-            for(int i = 0; i < targetPaths.Length; i++)
+            for (int i = 0; i < targetPaths.Length; i++)
             {
                 if (targetPaths[i] == "..")
                 {
