@@ -82,3 +82,6 @@ engine.AddRenderer(new ThematicBreakBlockRenderer());
 
 ### 段落内文本
 `LiteralInlineRenderer`用于展示普通文本。
+
+### 自定义容器
+`CustomContainerRenderer`用于展示[`Markdown自定义容器`](https://talk.commonmark.org/t/custom-container-for-block-and-inline/2051)。

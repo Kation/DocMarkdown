@@ -55,6 +55,7 @@ engine.AddRenderer(new HtmlBlockRenderer());
 engine.AddRenderer(new HtmlInlineRenderer());
 engine.AddRenderer(new HtmlEntityInlineRenderer());
 engine.AddRenderer(new ThematicBreakBlockRenderer());
+engine.AddRenderer(new CustomContainerRenderer());
 builder.Services.AddSingleton(navManager);
 builder.Services.AddSingleton(engine);
 builder.Services.AddSingleton(langManager);

@@ -12,6 +12,11 @@
 
 使用`<pre><code></pre></code>`元素包裹代码纯文本，并使用[`highlight.js`](https://highlightjs.org)高亮代码。
 
+示例：
+```
+代码内容
+```
+
 ## 标题
 `Components/HeadingCodeBlockView.razor`用于展示[`Markdown标题`](https://spec.commonmark.org/0.30/#atx-headings)。
 
@@ -27,10 +32,18 @@
 
 使用`<Blockquote></Blockquote>`元素包裹引用内容。
 
+示例：  
+> 1  
+> 2
+
 ## 分隔符
 `Components/ThematicBreakBlockView.razor`用于展示[`Markdown分隔符`](https://spec.commonmark.org/0.30/#thematic-breaks)。
 
 使用`<Divider />`作为分隔符。
+
+示例：
+
+----
 
 ## 列表
 `Components/OrderedListBlockView.razor`以及
@@ -42,10 +55,18 @@
 
 使用`<UnorderedListItem></UnorderedListItem>`包裹列表项内容。
 
+示例：
+* 1
+* 2
+* 3
+
 ## 段落内代码
 `Components/CodeInlineView.razor`用于展示[`Markdown内联代码`](https://spec.commonmark.org/0.30/#code-spans)。
 
 使用`<code></code>`包裹段落内代码内容。
+
+示例：  
+这是一段文本，其中`abc`为代码内容。
 
 ## 段落内强调
 `Components/EmphasisInlineView.razor`用于展示[`Markdown强调`](https://spec.commonmark.org/0.30/#emphasis-and-strong-emphasis)。
@@ -57,7 +78,36 @@
 
 使用`<Link></Link>`包裹段落内链接内容。
 
+支持站内导航，以`/`开头自动导航到相关文档。
+
+示例：[使用Github Pages](/deploy/githubpages)
+
+支持锚点导航，以`#`开头导航到页内锚点。
+
+示例：[代码](#代码)
+
 ## 段落内文本
 `Components/LiteralInlineView.razor`用于展示普通文本。
 
 使用`<span></span>`包裹段落内文本内容。
+
+## 自定义容器
+`Components/CustomContainerView.razor`用于展示[`Markdown自定义容器`](https://talk.commonmark.org/t/custom-container-for-block-and-inline/2051)。
+
+使用`<div class="alert alert-{type}"></div>`包裹段落内容。
+
+可用类型：
+* info
+* success
+* warning
+* danger
+* light
+* dark
+* primary
+* secondary
+* default
+
+示例：
+:::info
+一般用于显示提示信息。
+:::

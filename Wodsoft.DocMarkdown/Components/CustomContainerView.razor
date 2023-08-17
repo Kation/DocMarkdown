@@ -1,0 +1,38 @@
+﻿@inherits BlockView
+<Alert Color="Color" Visible>
+    @Content
+</Alert>
+@code {
+    [Parameter]
+    public string Type { get; set; }
+
+    public Color Color
+    {
+        get
+        {
+            switch (Type)
+            {
+                case "info":
+                    return Color.Info;
+                case "warning":
+                    return Color.Warning;
+                case "danger":
+                    return Color.Danger;
+                case "dark":
+                    return Color.Dark;
+                case "light":
+                    return Color.Light;
+                case "primary":
+                    return Color.Primary;
+                case "secondary":
+                    return Color.Secondary;
+                case "success":
+                    return Color.Success;                    
+                case "":
+                case "default":
+                default:
+                    return Color.Default;
+            }
+        }
+    }
+}

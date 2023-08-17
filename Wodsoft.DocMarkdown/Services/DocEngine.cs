@@ -108,7 +108,7 @@ namespace Wodsoft.DocMarkdown.Services
             }
             _catelogManager.Clear();
             var pipelineBuilder = new MarkdownPipelineBuilder();
-            pipelineBuilder.EnableTrackTrivia().UsePipeTables();
+            pipelineBuilder.EnableTrackTrivia().UsePipeTables().UseCustomContainers();
             var pipeline = pipelineBuilder.Build();
             RenderMarkdown(renderHandle, Markdown.Parse(md, pipeline));
         }
