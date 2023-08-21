@@ -57,9 +57,18 @@ Use `<OrderedList></OrderedList>` or `<UnorderedList></UnorderedList>` to wrap l
 Use `<UnorderedListItem></UnorderedListItem>` to wrap list item contents.
 
 Example:
-* 1
-* 2
-* 3
+- 1
+- 2
+- 3
+
+2. 2
+3. 3
+4. 4
+
+Support [task list](https://github.blog/2013-01-09-task-lists-in-gfm-issues-pulls-comments/), example:
+- [ ] TaskA
+- [x] TaskB
+- [ ] TaskC
 
 ## Inline Code
 `Components/CodeInlineView.razor` used to present [`Markdown Code Spans`](https://spec.commonmark.org/0.30/#code-spans).

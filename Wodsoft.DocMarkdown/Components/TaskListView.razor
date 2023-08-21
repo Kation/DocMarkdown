@@ -1,0 +1,12 @@
+﻿<input class="form-check-input" type="checkbox" disabled @attributes="attributes" style="width: 1rem; height: 1rem; margin-left: 0; margin-top: 0; position: relative; top: 0.2rem;" />
+@code {
+    [Parameter]
+    public bool IsChecked { get; set; }
+
+    private Dictionary<string, object> attributes = new Dictionary<string, object>();
+    protected override void OnInitialized()
+    {
+        if (IsChecked)
+            attributes.Add("checked", "checked");
+    }
+}

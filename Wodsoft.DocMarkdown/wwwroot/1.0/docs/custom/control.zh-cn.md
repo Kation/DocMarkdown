@@ -56,9 +56,18 @@
 使用`<UnorderedListItem></UnorderedListItem>`包裹列表项内容。
 
 示例：
-* 1
-* 2
-* 3
+- 1
+- 2
+- 3
+
+2. 2
+3. 3
+4. 4
+
+支持[任务列表](https://github.blog/2013-01-09-task-lists-in-gfm-issues-pulls-comments/)，示例：
+- [ ] TaskA
+- [x] TaskB
+- [ ] TaskC
 
 ## 段落内代码
 `Components/CodeInlineView.razor`用于展示[`Markdown内联代码`](https://spec.commonmark.org/0.30/#code-spans)。
